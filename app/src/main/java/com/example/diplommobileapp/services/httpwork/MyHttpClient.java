@@ -44,7 +44,7 @@ public class MyHttpClient {
                     };
 
                     HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-                    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+                    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
                     client = new OkHttpClient.Builder()
                             .cookieJar(cookieJar)

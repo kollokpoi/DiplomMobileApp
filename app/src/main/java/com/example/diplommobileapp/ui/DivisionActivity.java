@@ -2,6 +2,7 @@ package com.example.diplommobileapp.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.diplommobileapp.BuildConfig;
 import com.example.diplommobileapp.R;
+import com.example.diplommobileapp.adapters.MeasuresRecyclerAdapter;
+import com.example.diplommobileapp.data.classes.CustomMapView;
 import com.example.diplommobileapp.data.models.division.Division;
 import com.example.diplommobileapp.data.viewModels.MeasureViewModel;
 import com.example.diplommobileapp.databinding.ActivityDivisionBinding;
@@ -42,7 +45,7 @@ public class DivisionActivity extends AppCompatActivity {
     ActivityDivisionBinding binding;
     int divisionId;
     Division division;
-    MapView mapView;
+    CustomMapView mapView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,7 @@ public class DivisionActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         mapView = binding.mapView;
+        mapView.setViewParent(binding.scrollView);
 
         divisionId = getIntent().getIntExtra("id", 0);
         showLoading();
@@ -94,15 +98,10 @@ public class DivisionActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            for (MeasureViewModel vm:response.body()) {
-                                MeasureElement el = new MeasureElement(DivisionActivity.this);
-                                try {
-                                    el.setData(vm);
-                                    binding.measuresLL.addView(el);
-                                } catch (ParseException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
+                            MeasuresRecyclerAdapter adapter = new MeasuresRecyclerAdapter(response.body(),DivisionActivity.this);
+                            LinearLayoutManager manager = new LinearLayoutManager(DivisionActivity.this,LinearLayoutManager.HORIZONTAL,false);
+                            binding.recyclerView.setAdapter(adapter);
+                            binding.recyclerView.setLayoutManager(manager);
                         }
                     });
                 } else {

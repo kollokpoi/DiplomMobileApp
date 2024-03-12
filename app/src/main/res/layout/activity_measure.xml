@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.DivisionActivity2">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -63,6 +62,7 @@
                     android:layout_height="wrap_content"
                     android:minHeight="100dp"
                     android:orientation="vertical"
+                    android:clipChildren="false"
                     android:background="@drawable/bordered_shadow">
                     <TextView
                         android:textStyle="bold"
@@ -70,6 +70,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Расписание"/>
+
                 </LinearLayout>
                 <LinearLayout
                     android:layout_marginTop="14dp"
