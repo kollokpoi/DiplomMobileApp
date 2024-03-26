@@ -8,28 +8,37 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diplommobileapp.R;
-import com.example.diplommobileapp.data.viewModels.ChatViewModel;
+import com.example.diplommobileapp.data.models.chat.ChatViewModel;
 import com.example.diplommobileapp.services.imageworker.ImageUtils;
 import com.example.diplommobileapp.viewholders.ChatViewHolder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     private List<ChatViewModel> chats;
+
+    public ChatAdapter(List<ChatViewModel> chats){
+        this.chats = chats;
+    }
     @NonNull
     @Override
     public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_view,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item,parent,false);
         return new ChatViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatViewModel chat = chats.get(position);
-        holder.getCountTv().setText(chat.getNotCheckedCount());
+
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+        Date date = chat.getLastMessageTime();
+
+        holder.getTimeTv().setText(df.format(date));
         holder.getMessageTv().setText(chat.getLastMessage());
-        holder.getTimeTv().setText(chat.getLastMessageTime());
-        holder.getNameTv().setText(chat.getName());
+        holder.getNameTv().setText(chat.getTitle());
 
         byte[] preview = chat.getPreviewImage();
         if (preview!=null)

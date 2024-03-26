@@ -3,6 +3,7 @@ package com.example.diplommobileapp.services.httpwork;
 import com.example.diplommobileapp.data.models.User;
 import com.example.diplommobileapp.data.models.auth.AuthResponseModel;
 import com.example.diplommobileapp.data.models.auth.AuthModel;
+import com.example.diplommobileapp.data.models.chat.ChatViewModel;
 import com.example.diplommobileapp.data.models.division.Division;
 import com.example.diplommobileapp.data.models.event.Event;
 import com.example.diplommobileapp.data.models.measure.Measure;
@@ -60,4 +61,10 @@ public interface IApi {
     Call<List<MeasureViewModel>> GetMeasuresForDivision(@Body List<Integer> divisions);
     @GET("Measures/GetMeasure/{Id}")
     Call<MeasureDivisionsInfo> GetMeasure(@Path("Id")int id);
+
+
+    @GET("Chats/GetUserChats")
+    Call<List<ChatViewModel>> GetUserChats();
+    @GET("Chats/GetChat/{id}")
+    Call<ChatViewModel> GetChat(@Path("id") int id);
 }

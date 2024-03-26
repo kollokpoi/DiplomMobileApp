@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitFactory {
 
-    private static final String BASE_URL = "http://192.168.1.2:5207/api/";
+    private static final String BASE_URL = "http://192.168.0.12:5207/api/";
     private static IApi apiService;
 
     public static IApi getApiService(Context context) {

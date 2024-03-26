@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_user_24"
         android:title="@string/title_about" />
 
+    <item
+        android:id="@+id/navigation_dialogs"
+        android:icon="@drawable/ic_user_24"
+        android:title="@string/title_chats" />
+
 </menu>

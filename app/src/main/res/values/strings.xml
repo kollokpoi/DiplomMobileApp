@@ -15,7 +15,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_home">События</string>
     <string name="title_chats">Сообщения</string>
-    <string name="title_about">О себе</string>
+    <string name="title_about">Профиль</string>
     <string name="event">Событие</string>
     <string name="loading_error">Ошибка соединения</string>
     <string name="description">Описание</string>
@@ -31,4 +31,22 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+
+
+    <string name="tcp_id">192.168.0.12</string>
 </resources>

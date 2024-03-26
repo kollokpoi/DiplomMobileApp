@@ -22,6 +22,16 @@
         tools:layout="@layout/fragment_about">
 
         <action
+            android:id="@+id/action_SecondFragment_to_ThirdFragment"
+            app:destination="@id/ThirdFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ThirdFragment"
+        android:name="com.example.diplommobileapp.ui.main.ui.chats.ChatsFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_chats">
+
+        <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>

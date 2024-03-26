@@ -11,21 +11,17 @@ import com.example.diplommobileapp.R;
 
 public class ChatViewHolder extends RecyclerView.ViewHolder {
     private ImageView chatImage;
-    private TextView nameTv,messageTv,timeTv,countTv;
+    private TextView nameTv,messageTv,timeTv;
     public ChatViewHolder(@NonNull View itemView) {
         super(itemView);
-        chatImage =itemView.findViewById(R.id.chatImage);
-        nameTv = itemView.findViewById(R.id.chatName);
-        messageTv = itemView.findViewById(R.id.lastMessage);
-        timeTv = itemView.findViewById(R.id.lastMessageTime);
-        countTv = itemView.findViewById(R.id.notCheckCount);
+        chatImage =itemView.findViewById(R.id.chatImageView);
+        nameTv = itemView.findViewById(R.id.chatTitleTv);
+        messageTv = itemView.findViewById(R.id.chatTextTv);
+        timeTv = itemView.findViewById(R.id.chatLastMessageTimeTv);
     }
 
     public ImageView getChatImage() {
         return chatImage;
-    }
-    public TextView getCountTv() {
-        return countTv;
     }
     public TextView getMessageTv() {
         return messageTv;

@@ -7,10 +7,14 @@ import android.os.Bundle;
 import com.example.diplommobileapp.R;
 import com.example.diplommobileapp.databinding.ActivityChatBinding;
 import com.example.diplommobileapp.databinding.ActivityDivisionBinding;
+import com.example.diplommobileapp.services.TcpClient;
+
+import java.io.IOException;
 
 public class ChatActivity extends AppCompatActivity {
 
-    int chatId = 0;
+    private int chatId = 0;
+    private TcpClient client;
     ActivityChatBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
