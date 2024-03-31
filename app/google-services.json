@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "265664762736",
+    "firebase_url": "https://diplomfire-64515-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "diplomfire-64515",
+    "storage_bucket": "diplomfire-64515.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265664762736:android:03935f8f0d6b70d99ef5b5",
+        "android_client_info": {
+          "package_name": "com.example.diplommobileapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAFpREdsJYpsWcZpJQ-h7df067Yp6-2lg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
