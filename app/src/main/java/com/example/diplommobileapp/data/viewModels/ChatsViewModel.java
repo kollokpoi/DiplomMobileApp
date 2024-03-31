@@ -11,6 +11,7 @@ import com.example.diplommobileapp.data.models.chat.MessageViewModel;
 import com.example.diplommobileapp.services.httpwork.IApi;
 import com.example.diplommobileapp.services.httpwork.RetrofitFactory;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import retrofit2.Call;
@@ -21,17 +22,17 @@ public class ChatsViewModel extends ViewModel {
 
     private MutableLiveData<List<ChatViewModel>> chats = new MutableLiveData<>();
     private MutableLiveData<MessageViewModel> newMessage = new MutableLiveData<>();
+    private MutableLiveData<ChatViewModel> currentChat = new MutableLiveData<>();
     private MutableLiveData<Boolean> isError = new MutableLiveData<>();
 
-    private IApi api;
-    public static ChatsViewModel instance;
-    private Context context;
-    public ChatsViewModel(Context context) {
-        api = RetrofitFactory.getApiService(context);
+    private static ChatsViewModel instance;
+    public ChatsViewModel() {
+        if (chats.getValue()==null)
+            getChats();
         instance = this;
-        getChats();
     }
     public void getChats() {
+        IApi api = RetrofitFactory.getApiService();
         api.GetUserChats().enqueue(new Callback<List<ChatViewModel>>() {
             @Override
             public void onResponse(Call<List<ChatViewModel>> call, Response<List<ChatViewModel>> response) {
@@ -48,23 +49,37 @@ public class ChatsViewModel extends ViewModel {
             }
         });
     }
-
+    public static ChatsViewModel getInstance(){
+        if (instance==null)
+            return new ChatsViewModel();
+        else return  instance;
+    }
     public LiveData<List<ChatViewModel>> getChatsLiveData() {
         return chats;
     }
 
+    public MutableLiveData<ChatViewModel> getCurrentChat() {
+        return currentChat;
+    }
+
     public void addMessage(MessageViewModel message) {
         boolean chatExists = false;
-        for (ChatViewModel chat : chats.getValue()) {
-            if (chat.getId()==(message.getChatId())) {
-                chat.addMessage(message);
-                chats.setValue(chats.getValue());
-                chatExists = true;
-                break;
+        if (!chats.getValue().isEmpty())
+            for (ChatViewModel chat : chats.getValue()) {
+                if (chat.getId()==(message.getChatId())) {
+                    chat.addMessage(message);
+                    chats.setValue(chats.getValue());
+                    chatExists = true;
+                    if (currentChat.getValue()!=null && chat.getId()==currentChat.getValue().getId()){
+                        currentChat.getValue().addMessage(message);
+                        currentChat.setValue(currentChat.getValue());
+                    }
+                    break;
+                }
             }
-        }
 
         if (!chatExists) {
+            IApi api = RetrofitFactory.getApiService();
             api.GetChat(message.getChatId()).enqueue(new Callback<ChatViewModel>() {
                 @Override
                 public void onResponse(Call<ChatViewModel> call, Response<ChatViewModel> response) {
@@ -88,6 +103,10 @@ public class ChatsViewModel extends ViewModel {
 
     public LiveData<MessageViewModel> getNewMessageLiveData() {
         return newMessage;
+    }
+
+    public void setCurrentChat(ChatViewModel chat){
+        currentChat.setValue(chat);
     }
 
     public LiveData<Boolean> getIsErrorLiveData() {

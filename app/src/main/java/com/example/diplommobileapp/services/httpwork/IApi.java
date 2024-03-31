@@ -3,6 +3,7 @@ package com.example.diplommobileapp.services.httpwork;
 import com.example.diplommobileapp.data.models.User;
 import com.example.diplommobileapp.data.models.auth.AuthResponseModel;
 import com.example.diplommobileapp.data.models.auth.AuthModel;
+import com.example.diplommobileapp.data.models.auth.UserStamp;
 import com.example.diplommobileapp.data.models.chat.ChatViewModel;
 import com.example.diplommobileapp.data.models.division.Division;
 import com.example.diplommobileapp.data.models.event.Event;
@@ -27,7 +28,7 @@ public interface IApi {
     @POST("User/ResendCode")
     Call<Void> ResendCode(@Body AuthModel model);
     @POST("User/CheckAuthorize")
-    Call<Void> CheckAuthorize();
+    Call<UserStamp> CheckAuthorize();
 
     //user
     @POST("User/GetUser")
@@ -67,4 +68,11 @@ public interface IApi {
     Call<List<ChatViewModel>> GetUserChats();
     @GET("Chats/GetChat/{id}")
     Call<ChatViewModel> GetChat(@Path("id") int id);
+
+    @GET("Chats/GetChatByDivision/{id}")
+    Call<ChatViewModel> GetChatByDivision(@Path("id") int divisionId);
+
+
+    @POST("User/AddDeviceKey")
+    Call<Void> AddDeviceKey(@Body String token);
 }

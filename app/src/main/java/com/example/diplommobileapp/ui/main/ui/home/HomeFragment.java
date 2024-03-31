@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment {
         loadMeasures();
     }
     private void loadEvents(){
-        IApi retrofit = RetrofitFactory.getApiService(getContext());
+        IApi retrofit = RetrofitFactory.getApiService();
         retrofit.GetEventsForUser().enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment {
         });
     }
     private void loadAllEvents(){
-        IApi retrofit = RetrofitFactory.getApiService(getContext());
+        IApi retrofit = RetrofitFactory.getApiService();
         retrofit.GetEvents().enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment {
         });
     }
     private void loadMeasures(){
-        IApi retrofit = RetrofitFactory.getApiService(getContext());
+        IApi retrofit = RetrofitFactory.getApiService();
         retrofit.GetMeasuresForUser().enqueue(new Callback<List<MeasureViewModel>>() {
             @Override
             public void onResponse(Call<List<MeasureViewModel>> call, Response<List<MeasureViewModel>> response) {

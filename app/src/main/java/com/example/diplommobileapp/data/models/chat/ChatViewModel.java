@@ -13,10 +13,13 @@ public class ChatViewModel {
     @SerializedName("image")
     private String imageString;
     private int divisionId;
+    private String opponentName;
     private List<MessageViewModel> messages = new ArrayList<>();
 
 
-
+    public String getOpponentName() {
+        return opponentName;
+    }
     public int getId() {
         return id;
     }

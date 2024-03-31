@@ -11,16 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.diplommobileapp.MyApplication;
 import com.example.diplommobileapp.R;
 import com.example.diplommobileapp.adapters.ChatAdapter;
 import com.example.diplommobileapp.data.models.chat.ChatViewModel;
+import com.example.diplommobileapp.data.models.chat.MessageViewModel;
 import com.example.diplommobileapp.data.viewModels.ChatsViewModel;
-import com.example.diplommobileapp.data.viewModels.ViewModelFactory;
 import com.example.diplommobileapp.databinding.FragmentChatsBinding;
 import com.example.diplommobileapp.databinding.FragmentHomeBinding;
+import com.example.diplommobileapp.services.TcpClient;
 import com.example.diplommobileapp.services.httpwork.IApi;
 import com.example.diplommobileapp.services.httpwork.RetrofitFactory;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,7 +39,7 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        chatsViewModel = new ViewModelProvider(requireActivity(), new ViewModelFactory(context)).get(ChatsViewModel.class);
+        chatsViewModel  = new ViewModelProvider(requireActivity()).get(ChatsViewModel.class);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,12 +53,10 @@ public class ChatsFragment extends Fragment {
     {
         binding = FragmentChatsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         chatsViewModel.getChatsLiveData().observe(getViewLifecycleOwner(), chatViewModels -> {
-            ChatAdapter adapter = new ChatAdapter(chatViewModels);
+            ChatAdapter adapter = new ChatAdapter(chatViewModels,getContext());
             binding.recyclerView.setAdapter(adapter);
         });
-
 
         chatsViewModel.getNewMessageLiveData().observe(getViewLifecycleOwner(), message -> {
 
@@ -62,9 +64,6 @@ public class ChatsFragment extends Fragment {
 
         return root;
     }
-
-
-
 
     private void showLoading(){
         getActivity().runOnUiThread(new Runnable() {

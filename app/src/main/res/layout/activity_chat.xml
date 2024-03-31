@@ -1,9 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.ChatActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/headerLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="50dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:cardCornerRadius="25dp">
+
+            <ImageView
+                android:id="@+id/chatImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/shadow" />
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/nameTv"
+                style="@style/TitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Название" />
+
+            <TextView
+                android:id="@+id/usernameTv"
+                style="@style/SmallTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Название" />
+        </LinearLayout>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+
+    <LinearLayout
+        android:id="@+id/inputLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/shadow_back"
+        android:orientation="horizontal"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="8dp"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/mesageEt"
+            style="@style/BorderedEditText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="Сообщение"
+            android:layout_marginEnd="10dp" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sendMessageBtn"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/send_circle_outline"
+            android:backgroundTint="@color/oposite_color"/>
+    </LinearLayout>
+
+</LinearLayout>

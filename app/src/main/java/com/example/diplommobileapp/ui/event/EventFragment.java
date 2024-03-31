@@ -1,5 +1,6 @@
 package com.example.diplommobileapp.ui.event;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,14 +102,8 @@ public class EventFragment extends Fragment {
         binding.measuresRecycler.setAdapter(measureAdapter);
 
         showLoading();
-        return root;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         if (event==null){
-            IApi retrofit = RetrofitFactory.getApiService(getContext());
+            IApi retrofit = RetrofitFactory.getApiService();
             retrofit.GetEvent(eventId).enqueue(new Callback<Event>() {
                 @Override
                 public void onResponse(Call<Event> call, Response<Event> response) {
@@ -118,19 +114,22 @@ public class EventFragment extends Fragment {
                         endLoading();
                     }else{
                         showFail();
+
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Event> call, Throwable t) {
                     showFail();
+                    Log.d("mes",t.getMessage());
                 }
             });
         }
+        return root;
     }
 
     private void createEventUi(){
-        getActivity().runOnUiThread(new Runnable() {
+       ((Activity)getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 byte[] preview = event.getPreviewImage();
@@ -205,7 +204,7 @@ public class EventFragment extends Fragment {
         for (Division d: event.getDivisions()) {
             divisionsIds.add(d.getId());
         }
-        IApi retrofit = RetrofitFactory.getApiService(getContext());
+        IApi retrofit = RetrofitFactory.getApiService();
         retrofit.GetMeasuresForDivision(divisionsIds).enqueue(new Callback<List<MeasureViewModel>>() {
             @Override
             public void onResponse(Call<List<MeasureViewModel>> call, Response<List<MeasureViewModel>> response) {
@@ -222,12 +221,14 @@ public class EventFragment extends Fragment {
 
                 }else{
                     showFail();
+
                 }
             }
 
             @Override
             public void onFailure(Call<List<MeasureViewModel>> call, Throwable t) {
                 showFail();
+                Log.d("mes",t.getMessage());
             }
         });
     }
@@ -250,7 +251,7 @@ public class EventFragment extends Fragment {
         });
     }
     private void showFail(){
-        Toast toast = new Toast(getContext());
+        Toast toast = new Toast(requireContext());
         toast.setText(R.string.loading_error);
         toast.show();
     }

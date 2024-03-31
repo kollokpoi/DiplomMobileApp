@@ -45,7 +45,7 @@ public class SendCodeActivity extends AppCompatActivity {
         authModel.setCode(binding.codeEt.getText().toString());
         authModel.setPhone(phoneNumber);
 
-        IApi retrofit = RetrofitFactory.getApiService(this);
+        IApi retrofit = RetrofitFactory.getApiService();
         retrofit.UpdatePhone(authModel).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

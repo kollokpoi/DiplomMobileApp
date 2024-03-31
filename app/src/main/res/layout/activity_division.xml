@@ -56,6 +56,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingHorizontal="10dp">
+
                 <LinearLayout
                     android:id="@+id/measuresLL"
                     android:layout_marginTop="14dp"
@@ -93,6 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/description"/>
+
                     <TextView
                         android:id="@+id/descriptionTv"
                         android:layout_width="wrap_content"
@@ -104,12 +106,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bordered_shadow">
+
                     <TextView
-                        android:textStyle="bold"
-                        android:textSize="16sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Основное место проведения"/>
+                        android:text="Основное место проведения"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
                     <TextView
                         android:id="@+id/placeNameTv"
                         android:layout_width="wrap_content"
@@ -118,9 +122,21 @@
                     <com.example.diplommobileapp.data.classes.CustomMapView
                         app:layout_constraintTop_toBottomOf="@+id/scrollView"
                         android:id="@+id/mapView"
+                        android:nestedScrollingEnabled="true"
                         android:layout_height="300dp"
                         android:layout_width="match_parent" />
+
                 </LinearLayout>
+                <Button
+                    android:id="@+id/goToChatBtn"
+                    android:visibility="gone"
+                    android:onClick="onChat"
+                    android:layout_marginTop="10dp"
+                    android:text="Задать вопрос"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    style="@style/BorderedMainButton"/>
             </LinearLayout>
         </LinearLayout>
 

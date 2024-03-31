@@ -44,6 +44,7 @@ public class TcpClient {
     }
 
     public void disconnect() throws IOException {
+        sendData("disconnect");
         isRunning = false;
         socket.close();
     }

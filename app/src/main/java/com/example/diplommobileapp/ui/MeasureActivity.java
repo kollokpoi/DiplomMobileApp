@@ -45,7 +45,7 @@ public class MeasureActivity extends AppCompatActivity {
         loadData();
     }
     private void loadData(){
-        IApi retrofit = RetrofitFactory.getApiService(this);
+        IApi retrofit = RetrofitFactory.getApiService();
         retrofit.GetMeasure(measureInfoId).enqueue(new Callback<MeasureDivisionsInfo>() {
             @Override
             public void onResponse(Call<MeasureDivisionsInfo> call, Response<MeasureDivisionsInfo> response) {

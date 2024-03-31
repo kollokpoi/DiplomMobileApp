@@ -2,6 +2,7 @@ package com.example.diplommobileapp.services.httpwork;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.diplommobileapp.MyApplication;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -39,6 +40,7 @@ public class MyHttpClient {
                         @Override
                         public List<Cookie> loadForRequest(HttpUrl url) {
                             List<Cookie> storedCookies = getCookiesFromPreferences(context);
+
                             return storedCookies != null ? storedCookies : cookies;
                         }
                     };
@@ -59,7 +61,6 @@ public class MyHttpClient {
     private static void saveCookiesToPreferences(Context context, List<Cookie> cookies) {
         SharedPreferences preferences = context.getSharedPreferences(COOKIE_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-
         Gson gson = new Gson();
         String jsonCookies = gson.toJson(cookies);
         editor.putString(COOKIE_KEY, jsonCookies);

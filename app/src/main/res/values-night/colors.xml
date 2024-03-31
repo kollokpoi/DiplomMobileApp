@@ -11,13 +11,16 @@
     <color name="blue">#242582</color>
     <color name="accent">#F64C72</color>
     <color name="error_color">#ABFF0C0C</color>
-    <color name="shadow">#86000000</color>
+    <color name="shadow">#59555555</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
     <color name="light_blue_A200">#FF40C4FF</color>
     <color name="light_blue_A400">#FF00B0FF</color>
-    <color name="black_overlay">#66000000</color>
+    <color name="black_overlay">#616161</color>
     <color name="shadow_back">#86000000</color>
-    <color name="oposite_color">@color/black</color>
+
+    <color name="oposite_color">@color/white</color>
     <color name="main_color">@color/accent</color>
+
+    <color name="main_textColor">@color/white</color>
 </resources>

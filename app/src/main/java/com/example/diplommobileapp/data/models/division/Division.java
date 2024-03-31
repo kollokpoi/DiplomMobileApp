@@ -25,7 +25,11 @@ public class Division {
     private Event event;
     private List<MeasureDivisionsInfo> measureDivisionsInfos;
     private List<DivisionUsers> divisionMembers;
+    private boolean divisionLeaderExist;
 
+    public boolean isDivisionLeaderExist() {
+        return divisionLeaderExist;
+    }
 
     public int getId() {
         return id;
@@ -87,6 +91,8 @@ public class Division {
     public List<DivisionUsers> getDivisionMembers() {
         return divisionMembers;
     }
+
+
 
 
 }

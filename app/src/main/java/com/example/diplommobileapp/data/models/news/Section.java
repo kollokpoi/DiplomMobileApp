@@ -4,7 +4,7 @@ public class Section {
     private int id;
     private String title;
     private String description;
-    private byte[] image;
+    private String image;
     private News news;
 
 
@@ -17,9 +17,6 @@ public class Section {
     }
     public String getDescription() {
         return description;
-    }
-    public byte[] getImage() {
-        return image;
     }
     public News getNews() {
         return news;

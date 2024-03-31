@@ -47,6 +47,12 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 
+    <!-- Server Preferences -->
+    <string name="tcp_ip">192.168.1.4</string>
+    <string name="api_ip">http://192.168.1.4:5207/api/</string>
 
-    <string name="tcp_id">192.168.0.12</string>
+
+    <!-- Notification Preferences -->
+    <string name="channel_name">ProgramathNotification</string>
+    <string name="channel_description">PrograMath messages notification</string>
 </resources>

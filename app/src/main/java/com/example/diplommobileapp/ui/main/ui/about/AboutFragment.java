@@ -58,7 +58,7 @@ public class AboutFragment extends Fragment {
     }
 
     void getData(){
-        IApi retrofit = RetrofitFactory.getApiService(getContext());
+        IApi retrofit = RetrofitFactory.getApiService();
         retrofit.getUser().enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -97,7 +97,7 @@ public class AboutFragment extends Fragment {
             if (user.setPhoneNumber(binding.numberEt.getText().toString())){
                 if (user.setBirthDay(binding.birthdayEt.getText().toString())){
                     user.setCourse(binding.courseEt.getText().toString());
-                    IApi retrofit = RetrofitFactory.getApiService(getContext());
+                    IApi retrofit = RetrofitFactory.getApiService();
                     retrofit.UpdateUser(user).enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {

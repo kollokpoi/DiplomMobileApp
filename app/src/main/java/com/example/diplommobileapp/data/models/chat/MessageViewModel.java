@@ -12,6 +12,19 @@ public class MessageViewModel {
     private int divisionId;
     private String message;
     private String dateTime;
+    private boolean selfSend = false;
+
+    public boolean isSelfSend() {
+        return selfSend;
+    }
+
+    public void setChatId(int chatId) {
+        this.chatId = chatId;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public int getChatId() {
         return chatId;
@@ -33,5 +46,14 @@ public class MessageViewModel {
         else{
             return null;
         }
+    }
+    public void setDateTime(Date dateTime)  {
+        if (dateTime!=null){
+                this.dateTime = DateWorker.getFullDate(dateTime);
+        }
+    }
+
+    public void setSelfSend(boolean selfSend) {
+        this.selfSend = selfSend;
     }
 }
