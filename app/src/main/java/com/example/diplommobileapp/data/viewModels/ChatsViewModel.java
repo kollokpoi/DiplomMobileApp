@@ -1,6 +1,8 @@
 package com.example.diplommobileapp.data.viewModels;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,6 +15,7 @@ import com.example.diplommobileapp.services.httpwork.RetrofitFactory;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,7 +67,7 @@ public class ChatsViewModel extends ViewModel {
 
     public void addMessage(MessageViewModel message) {
         boolean chatExists = false;
-        if (!chats.getValue().isEmpty())
+        if (!Objects.requireNonNull(chats.getValue()).isEmpty())
             for (ChatViewModel chat : chats.getValue()) {
                 if (chat.getId()==(message.getChatId())) {
                     chat.addMessage(message);
@@ -86,7 +89,7 @@ public class ChatsViewModel extends ViewModel {
                     if (response.isSuccessful()) {
                         ChatViewModel chat = response.body();
                         chats.getValue().add(chat);
-                        chats.setValue(chats.getValue()); // Обновить LiveData
+                        chats.setValue(chats.getValue());
                     } else {
                         isError.setValue(true);
                     }
@@ -99,6 +102,24 @@ public class ChatsViewModel extends ViewModel {
             });
         }
         newMessage.setValue(message);
+    }
+    public void updateMessageTime(MessageViewModel message){
+        Log.d("messageSended",message.getCreateDate().toString());
+        ChatViewModel currentChat = this.currentChat.getValue();
+        List<MessageViewModel> messages = currentChat.getMessages();
+        int i = 0;
+        while (i<messages.size()){
+            if (messages.get(i).getCreateDate()!=null){
+                Log.d("messageDate",messages.get(i).getCreateDate().toString());
+                if (messages.get(i).getCreateDate() == message.getCreateDate() && messages.get(i).isSelfSend()){
+                    this.currentChat.setValue(currentChat);
+                    Log.d("messageFound","messageFound");
+                    break;
+                }
+            }
+
+            i++;
+        }
     }
 
     public LiveData<MessageViewModel> getNewMessageLiveData() {

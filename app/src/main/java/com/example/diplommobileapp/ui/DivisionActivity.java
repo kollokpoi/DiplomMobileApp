@@ -13,12 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.diplommobileapp.R;
 import com.example.diplommobileapp.adapters.MeasuresRecyclerAdapter;
 import com.example.diplommobileapp.data.classes.CustomMapView;
 import com.example.diplommobileapp.data.models.division.Division;
+import com.example.diplommobileapp.data.viewModels.ChatsViewModel;
 import com.example.diplommobileapp.data.viewModels.DivisionViewModel;
 import com.example.diplommobileapp.data.viewModels.MeasureViewModel;
 import com.example.diplommobileapp.databinding.ActivityDivisionBinding;
@@ -51,7 +53,6 @@ public class DivisionActivity extends AppCompatActivity {
 
     private DivisionViewModel viewModel;
 
-    Division division;
     CustomMapView mapView;
 
     @Override
@@ -64,9 +65,7 @@ public class DivisionActivity extends AppCompatActivity {
         mapView = binding.mapView;
         mapView.setViewParent(binding.scrollView);
 
-        divisionId = getIntent().getIntExtra("id", 0);
-        showLoading();
-        loadData();
+        viewModel = new ViewModelProvider(this).get(DivisionViewModel.class);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -76,6 +75,39 @@ public class DivisionActivity extends AppCompatActivity {
                     REQUEST_CODE_PERMISSION_LOCATION
             );
         }
+
+
+
+        divisionId = getIntent().getIntExtra("id", 0);
+        viewModel.setDivisionId(divisionId);
+
+
+        viewModel.getDivisionMutableLiveData().observe(this,division->{
+            try {
+                createUi(division);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        viewModel.getMeasuresMutableLivedata().observe(this,measures->{
+            MeasuresRecyclerAdapter adapter = new MeasuresRecyclerAdapter(measures,DivisionActivity.this);
+            LinearLayoutManager manager = new LinearLayoutManager(DivisionActivity.this,LinearLayoutManager.HORIZONTAL,false);
+            binding.recyclerView.setAdapter(adapter);
+            binding.recyclerView.setLayoutManager(manager);
+        });
+        viewModel.getIsError().observe(this,error->{
+            if (error){
+                showFail();
+            }
+        });
+        viewModel.getIsLoading().observe(this,loading->{
+            if (loading){
+                showLoading();
+            }else{
+                endLoading();
+            }
+        });
+
     }
 
     public void onChat(View view){
@@ -83,57 +115,8 @@ public class DivisionActivity extends AppCompatActivity {
         intent.putExtra("divisionId",divisionId);
         startActivity(intent);
     }
-    private void loadData(){
-        List<Integer> idList = new ArrayList<>();
-        idList.add(divisionId);
-        IApi retrofit = RetrofitFactory.getApiService();
-        retrofit.GetDivision(divisionId).enqueue(new Callback<Division>() {
-            @Override
-            public void onResponse(@NonNull Call<Division> call, @NonNull Response<Division> response) {
-                if (response.isSuccessful()) {
-                    endLoading();
-                    division = response.body();
-                    runOnUiThread(() -> {
-                        try {
-                            createUi();
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<Division> call, @NonNull Throwable t) {
-                endLoading();
-                showFail();
-                Log.d("mes", Objects.requireNonNull(t.getMessage()));
-            }
-        });
-
-        IApi measuresRetrofit = RetrofitFactory.getApiService();
-        measuresRetrofit.GetMeasuresForDivision(idList).enqueue(new Callback<List<MeasureViewModel>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<MeasureViewModel>> call, @NonNull Response<List<MeasureViewModel>> response) {
-                if (response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        MeasuresRecyclerAdapter adapter = new MeasuresRecyclerAdapter(response.body(),DivisionActivity.this);
-                        LinearLayoutManager manager = new LinearLayoutManager(DivisionActivity.this,LinearLayoutManager.HORIZONTAL,false);
-                        binding.recyclerView.setAdapter(adapter);
-                        binding.recyclerView.setLayoutManager(manager);
-                    });
-                } else {
-                    showFail();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<MeasureViewModel>> call, @NonNull Throwable t) {
-                showFail();
-            }
-        });
-    }
-    private void createUi() throws ParseException {
+    private void createUi(Division division) throws ParseException {
         byte[] preview = division.getPreviewImage();
         if (preview != null) ImageUtils.setImageViewFromByteArray(preview, binding.eventImageView);
         String resultDate = "C ";
@@ -150,10 +133,10 @@ public class DivisionActivity extends AppCompatActivity {
         binding.placeNameTv.setText(division.getPlaceName());
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            createMap();
+            createMap(division);
         }
     }
-    private void createMap(){
+    private void createMap(Division division){
         mapView.getMap().move(
                 new CameraPosition(
                         new Point(division.getLatitude(),division.getLongitude()), 15f, 0.0f, 0.0f),

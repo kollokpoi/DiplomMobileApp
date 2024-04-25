@@ -1,5 +1,8 @@
 package com.example.diplommobileapp.data.models.chat;
 
+import android.util.Log;
+
+import com.example.diplommobileapp.data.viewModels.ChatsViewModel;
 import com.example.diplommobileapp.services.DateWorker;
 
 import java.text.ParseException;
@@ -12,6 +15,7 @@ public class MessageViewModel {
     private int divisionId;
     private String message;
     private String dateTime;
+    private Date createDate;
     private boolean selfSend = false;
 
     public boolean isSelfSend() {
@@ -42,15 +46,24 @@ public class MessageViewModel {
             } catch (ParseException e) {
                 return null;
             }
-        }
-        else{
-            return null;
-        }
+        } else if (createDate!=null) {
+            return (createDate);
+        } else return null;
     }
-    public void setDateTime(Date dateTime)  {
-        if (dateTime!=null){
-                this.dateTime = DateWorker.getFullDate(dateTime);
-        }
+    public void setDateTime()  {
+        this.dateTime = DateWorker.getFullDate(new Date());
+        ChatsViewModel.getInstance().updateMessageTime(this);
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+    public void setCreateDate() {
+        this.createDate = new Date();
+    }
+
+    public boolean isSend()  {
+        return dateTime!=null;
     }
 
     public void setSelfSend(boolean selfSend) {

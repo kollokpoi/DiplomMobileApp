@@ -1,6 +1,7 @@
 package com.example.diplommobileapp.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,8 +42,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MapKitFactory.setApiKey(BuildConfig.MAPKIT_API_KEY);
-        MapKitFactory.initialize(this);
+        try {
+            MapKitFactory.setApiKey(BuildConfig.MAPKIT_API_KEY);
+            MapKitFactory.initialize(this);
+        }catch (AssertionError exception){
+            exception.printStackTrace();
+        }
+
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -61,10 +67,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             Gson gsonSerializer = new Gson();
-            while (true){
+            while (true) {
                 try {
                     String messageJson = tcpClient.receiveData();
-                    MessageViewModel messageViewModel = gsonSerializer.fromJson(messageJson,MessageViewModel.class);
+                    if (messageJson == null) {
+                        tcpClient.connectWithRetries();
+                        continue;
+                    }
+
+                    MessageViewModel messageViewModel = gsonSerializer.fromJson(messageJson, MessageViewModel.class);
                     messageViewModel.setSelfSend(false);
                     runOnUiThread(new Runnable() {
                         @Override
@@ -72,11 +83,10 @@ public class MainActivity extends AppCompatActivity {
                             viewModel.addMessage(messageViewModel);
                         }
                     });
-
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d("disconnected","Я отсоеденился");
+                    tcpClient.connectWithRetries();
                 }
-
             }
         }
     };
@@ -91,11 +101,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        try {
-            tcpClient.disconnect();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         super.onDestroy();
 
     }

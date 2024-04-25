@@ -25,6 +25,8 @@ import com.example.diplommobileapp.services.httpwork.RetrofitFactory;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -54,6 +56,15 @@ public class ChatsFragment extends Fragment {
         binding = FragmentChatsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         chatsViewModel.getChatsLiveData().observe(getViewLifecycleOwner(), chatViewModels -> {
+            Comparator<ChatViewModel> comparator = new Comparator<ChatViewModel>() {
+                @Override
+                public int compare(ChatViewModel chat1, ChatViewModel chat2) {
+                    return chat2.getLastMessageTime().compareTo(chat1.getLastMessageTime());
+                }
+            };
+
+            Collections.sort(chatViewModels, comparator);
+
             ChatAdapter adapter = new ChatAdapter(chatViewModels,getContext());
             binding.recyclerView.setAdapter(adapter);
         });

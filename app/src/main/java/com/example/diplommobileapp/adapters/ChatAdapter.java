@@ -37,9 +37,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatViewModel chat = chats.get(position);
 
-  
         holder.getMessageTv().setText(chat.getLastMessage());
         holder.getNameTv().setText(chat.getTitle());
+
+        Date date = chat.getLastMessageTime();
+        if (date==null)
+            date = new Date();
+        String minutes = date.getMinutes()>9?String.valueOf(date.getMinutes()) :"0"+date.getMinutes();
+        String hours = date.getHours()>9?String.valueOf(date.getHours()) :"0"+date.getHours();
+        holder.getTimeTv().setText(hours+":"+minutes);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

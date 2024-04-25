@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ public class ChatActivity extends AppCompatActivity {
     private TcpClient client;
     private ChatsViewModel viewModel;
     ActivityChatBinding binding;
+    private boolean sendingMessage = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,23 +116,57 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
     public void onSendClick(View view){
-        if (binding.mesageEt.getText().length()>0 && !binding.mesageEt.getText().toString().trim().isEmpty()) {
-            MessageViewModel messageViewModel = new MessageViewModel();
-            messageViewModel.setMessage(binding.mesageEt.getText().toString());
-            messageViewModel.setChatId(chatId);
-            messageViewModel.setSelfSend(true);
-            binding.mesageEt.setText("");
-            Gson gson = new Gson();
-            new Thread(()->{client.sendData(gson.toJson(messageViewModel));}).start();
+        if (!sendingMessage)
+            if (binding.mesageEt.getText().length()>0 && !binding.mesageEt.getText().toString().trim().isEmpty()) {
+                String messageText = binding.mesageEt.getText().toString();
+                messageText = messageText.trim();
 
-            viewModel.addMessage(messageViewModel);
-        }
-
+                MessageViewModel messageViewModel = new MessageViewModel();
+                messageViewModel.setMessage(messageText);
+                messageViewModel.setChatId(chatId);
+                messageViewModel.setSelfSend(true);
+                messageViewModel.setCreateDate();
+                viewModel.addMessage(messageViewModel);
+                binding.mesageEt.setText("");
+                sendingMessage = true;
+                SendMessageTask task = new SendMessageTask(messageViewModel, new OnMessageSended() {
+                    @Override
+                    public void onTaskComplete() {
+                        messageViewModel.setDateTime();
+                        sendingMessage = false;
+                    }
+                });
+                task.execute();
+            }
     }
+
 
     private void showFail(){
         Toast toast = new Toast(this);
         toast.setText(R.string.loading_error);
         toast.show();
+    }
+
+    public class SendMessageTask extends AsyncTask<Void, Void, String> {
+        MessageViewModel messageViewModel;
+        OnMessageSended onMessageSended;
+        public SendMessageTask(MessageViewModel messageViewModel,OnMessageSended onMessageSended){
+            this.messageViewModel = messageViewModel;
+            this.onMessageSended = onMessageSended;
+        }
+        @Override
+        protected String doInBackground(Void... voids) {
+            client.sendMessage(messageViewModel);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            onMessageSended.onTaskComplete();
+        }
+    }
+    public interface OnMessageSended
+    {
+        void onTaskComplete();
     }
 }

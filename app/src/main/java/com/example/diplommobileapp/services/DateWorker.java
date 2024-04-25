@@ -21,8 +21,13 @@ public class DateWorker {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, HH:mm", Locale.getDefault());
         return sdf.format(date);
     }
-    public static String getFullDate(Date date){
+    public static String getOnlyDate(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        return sdf.format(date);
+    }
+    public static String getFullDate(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return sdf.format(date);
     }
     public static String formatDate(String dateString){

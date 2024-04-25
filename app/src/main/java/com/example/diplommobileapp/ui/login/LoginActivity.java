@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
         new Thread(()-> {
             try {
                 MyApplication.client.connect();
-                MyApplication.client.authentification(MyApplication.userStamp);
+                MyApplication.client.setUserCode(MyApplication.userStamp);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

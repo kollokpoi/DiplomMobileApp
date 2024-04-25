@@ -9,9 +9,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitFactory {
-
     private static IApi apiService;
-
     public static void CreateIApiInstance(Context context){
         synchronized (RetrofitFactory.class) {
             if (apiService == null) {
@@ -27,9 +25,7 @@ public class RetrofitFactory {
             }
         }
     }
-
     public static IApi getApiService() {
         return apiService;
     }
-
 }

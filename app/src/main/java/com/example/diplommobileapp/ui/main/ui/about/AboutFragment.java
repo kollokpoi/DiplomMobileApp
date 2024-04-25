@@ -72,7 +72,7 @@ public class AboutFragment extends Fragment {
                                 ImageUtils.setImageViewFromByteArray(image,binding.imageView);
                             binding.nameEt.setText(user.getFullName());
                             try {
-                                binding.birthdayEt.setText(DateWorker.getFullDate(user.getBirthDay()));
+                                binding.birthdayEt.setText(DateWorker.getOnlyDate(user.getBirthDay()));
                             } catch (ParseException e) {
                                 throw new RuntimeException(e);
                             }

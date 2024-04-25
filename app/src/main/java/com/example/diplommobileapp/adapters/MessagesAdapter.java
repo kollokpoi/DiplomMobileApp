@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,13 +47,22 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder messageViewHolder, int i) {
         MessageViewModel chat = messages.get(i);
-        Date date = chat.getDateTime();
+
         messageViewHolder.getMessageTv().setText(chat.getMessage());
-        if (date!=null)
-            messageViewHolder.getTimeTv().setText(date.getHours()+":"+date.getMinutes());
-        else {
-            date = new Date();
-            messageViewHolder.getTimeTv().setText(date.getHours()+":"+date.getMinutes());
+
+        if (chat.isSend()){
+            ProgressBar progressBar = messageViewHolder.getLoadingBar();
+            if (progressBar!=null){
+                progressBar.setVisibility(View.GONE);
+                messageViewHolder.getTimeTv().setVisibility(View.VISIBLE);
+            }
+
+            Date date = chat.getDateTime();
+            if (date==null)
+                date = new Date();
+            String minutes = date.getMinutes()>9?String.valueOf(date.getMinutes()) :"0"+date.getMinutes();
+            String hours = date.getHours()>9?String.valueOf(date.getHours()) :"0"+date.getHours();
+            messageViewHolder.getTimeTv().setText(hours+":"+minutes);
         }
     }
 
