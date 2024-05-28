@@ -2,6 +2,7 @@ package com.example.diplommobileapp.ui.main;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,7 +56,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        if (MyApplication.userStamp.getRoles().contains("WebUser") || MyApplication.userStamp.getRoles().contains("OrganizationUser")){
+            binding.navView.setVisibility(View.GONE);
+            NavigationUI.setupWithNavController(binding.navViewForOther, navController);
+        }else{
+            binding.navViewForOther.setVisibility(View.GONE);
+            NavigationUI.setupWithNavController(binding.navView, navController);
+        }
+
         controller = navController;
 
         viewModel = new ViewModelProvider(this).get(ChatsViewModel.class);
@@ -84,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 } catch (IOException e) {
-                    Log.d("disconnected","Я отсоеденился");
+                    Log.d("TCP","disconnected");
                     tcpClient.connectWithRetries();
                 }
             }

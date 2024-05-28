@@ -107,10 +107,7 @@ public class AboutFragment extends Fragment {
                                     intent.putExtra("phone",user.getPhoneNumber());
                                     getContext().startActivity(intent);
                                 } else{
-                                    Toast toast = new Toast(getContext());
-                                    toast.setText("Успешно");
-                                    toast.setDuration(Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Toast.makeText(getContext(),"Успешно",Toast.LENGTH_LONG).show();
                                 }
                             }
                         }

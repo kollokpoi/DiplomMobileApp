@@ -41,9 +41,9 @@ public class MeasuresRecyclerAdapter extends RecyclerView.Adapter<CircledItemRec
     @Override
     public CircledItemRecycleViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.event_view,viewGroup,false);
-        if (orientation== LinearLayoutManager.HORIZONTAL){
+        if (orientation == LinearLayoutManager.HORIZONTAL && measures.size()>1){
             ViewGroup.LayoutParams params = view.getLayoutParams();
-            ViewGroup.LayoutParams newParams = new LinearLayout.LayoutParams((int)(viewGroup.getMeasuredWidth() * 0.8),params.height,1f);
+            LinearLayout.LayoutParams newParams = new LinearLayout.LayoutParams((int)(viewGroup.getMeasuredWidth() * 0.8),params.height,1f);
             view.setLayoutParams(newParams);
         }
 
@@ -53,17 +53,20 @@ public class MeasuresRecyclerAdapter extends RecyclerView.Adapter<CircledItemRec
 
     @Override
     public void onBindViewHolder(@NonNull CircledItemRecycleViewHolder measuresRecyclerViewHolder, int i) {
-        if (orientation== LinearLayoutManager.HORIZONTAL) {
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) measuresRecyclerViewHolder.itemView.getLayoutParams();
-            layoutParams.leftMargin = dpToPx(10);
-            layoutParams.rightMargin = dpToPx(10);
+        try{
+            if (orientation== LinearLayoutManager.HORIZONTAL && measures.size()>1) {
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) measuresRecyclerViewHolder.itemView.getLayoutParams();
 
-            if (i == 0)
-                layoutParams.leftMargin = 0;
-            if (i == measures.size() - 1)
-                layoutParams.rightMargin = 0;
+                layoutParams.leftMargin = dpToPx(10);
+                layoutParams.rightMargin = dpToPx(10);
+
+                if (i == 0)
+                    layoutParams.leftMargin = 0;
+                if (i == measures.size() - 1)
+                    layoutParams.rightMargin = 0;
+            }
         }
-
+        catch (Exception ex){}
 
         MeasureViewModel measure = measures.get(i);
 
@@ -85,7 +88,9 @@ public class MeasuresRecyclerAdapter extends RecyclerView.Adapter<CircledItemRec
                 Intent intent = new Intent(context, MeasureActivity.class);
                 intent.putExtra("id",measure.getId());
                 intent.putExtra("name",measure.getEventName());
-                intent.putExtra("Image",measure.getIconImage());
+                if (measure.getIconImage().length<600864){
+                    intent.putExtra("Image",measure.getIconImage());
+                }
                 context.startActivity(intent);
             }
         });

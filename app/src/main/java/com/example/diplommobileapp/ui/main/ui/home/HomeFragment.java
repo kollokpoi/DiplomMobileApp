@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
         int screenWidth = ScreenUtils.getScreenWidth(getActivity());
 
         ViewGroup.LayoutParams params = underline.getLayoutParams();
-        params.width = (screenWidth / 3);
+        params.width = (screenWidth / 2);
         underline.setLayoutParams(params);
 
         showLoading();
@@ -69,8 +69,6 @@ public class HomeFragment extends Fragment {
 
         assert binding.eventsLinear != null;
         binding.eventsLinear.setOnClickListener(this::eventsLinearClick);
-        assert binding.allEventsLinear != null;
-        binding.allEventsLinear.setOnClickListener(this::allEventsLinearClick);
         assert binding.measuresLinear != null;
         binding.measuresLinear.setOnClickListener(this::measuresLinearClick);
 
@@ -82,53 +80,20 @@ public class HomeFragment extends Fragment {
         binding.eventsTv.setTypeface(null, Typeface.BOLD);
         assert binding.measuresTv != null;
         binding.measuresTv.setTypeface(null, Typeface.NORMAL);
-        assert binding.allEventsTv != null;
-        binding.allEventsTv.setTypeface(null, Typeface.NORMAL);
         underlineAnimator((LinearLayout) view);
         loadEvents();
-    }
-    private void allEventsLinearClick(View view){
-        assert binding.eventsTv != null;
-        binding.eventsTv.setTypeface(null, Typeface.NORMAL);
-        assert binding.measuresTv != null;
-        binding.measuresTv.setTypeface(null, Typeface.NORMAL);
-        assert binding.allEventsTv != null;
-        binding.allEventsTv.setTypeface(null, Typeface.BOLD);
-        underlineAnimator((LinearLayout) view);
-        loadAllEvents();
     }
     private void measuresLinearClick(View view){
         assert binding.eventsTv != null;
         binding.eventsTv.setTypeface(null, Typeface.NORMAL);
         assert binding.measuresTv != null;
         binding.measuresTv.setTypeface(null, Typeface.BOLD);
-        assert binding.allEventsTv != null;
-        binding.allEventsTv.setTypeface(null, Typeface.NORMAL);
         underlineAnimator((LinearLayout) view);
         loadMeasures();
     }
     private void loadEvents(){
         IApi retrofit = RetrofitFactory.getApiService();
         retrofit.GetEventsForUser().enqueue(new Callback<List<Event>>() {
-            @Override
-            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
-                if (response.isSuccessful()){
-                    createEventElements(response.body());
-                    endLoading();
-                }else{
-                    showFail();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Event>> call, Throwable t) {
-                showFail();
-            }
-        });
-    }
-    private void loadAllEvents(){
-        IApi retrofit = RetrofitFactory.getApiService();
-        retrofit.GetEvents().enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
                 if (response.isSuccessful()){
@@ -205,9 +170,7 @@ public class HomeFragment extends Fragment {
         });
     }
     private void showFail(){
-        Toast toast = new Toast(getContext());
-        toast.setText(R.string.loading_error);
-        toast.show();
+        Toast.makeText(getContext(),R.string.loading_error,Toast.LENGTH_SHORT).show();
     }
 
     void underlineAnimator(@NonNull LinearLayout layout){

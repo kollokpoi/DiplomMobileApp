@@ -1,13 +1,20 @@
 package com.example.diplommobileapp.ui.event;
 
+import static com.example.diplommobileapp.ui.DivisionActivity.REQUEST_CODE_PERMISSION_LOCATION;
+
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PointF;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.diplommobileapp.BuildConfig;
+import com.example.diplommobileapp.MyApplication;
 import com.example.diplommobileapp.R;
 import com.example.diplommobileapp.adapters.DivisionRecycleAdapter;
 import com.example.diplommobileapp.adapters.MeasuresRecyclerAdapter;
@@ -50,6 +58,7 @@ import com.yandex.runtime.image.ImageProvider;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -83,6 +92,14 @@ public class EventFragment extends Fragment {
         super.onCreate(savedInstanceState);
         assert getArguments() != null;
         eventId = getArguments().getInt("eventId", -1);
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE_PERMISSION_LOCATION
+            );
+        }
     }
 
     @Override
@@ -101,9 +118,16 @@ public class EventFragment extends Fragment {
         MeasuresRecyclerAdapter measureAdapter = new MeasuresRecyclerAdapter(new ArrayList<MeasureViewModel>(), getContext());
         binding.measuresRecycler.setAdapter(measureAdapter);
 
+        binding.goToChatBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), ChatActivity.class);
+            intent.putExtra("divisionId",event.getDivisions().get(0).getId());
+            startActivity(intent);
+        });
         showLoading();
+
         if (event==null){
             IApi retrofit = RetrofitFactory.getApiService();
+
             retrofit.GetEvent(eventId).enqueue(new Callback<Event>() {
                 @Override
                 public void onResponse(Call<Event> call, Response<Event> response) {
@@ -129,7 +153,7 @@ public class EventFragment extends Fragment {
     }
 
     private void createEventUi(){
-       ((Activity)getContext()).runOnUiThread(new Runnable() {
+       getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 byte[] preview = event.getPreviewImage();
@@ -161,6 +185,11 @@ public class EventFragment extends Fragment {
                     binding.divisionLL.setVisibility(View.GONE);
                     binding.mapHolderLL.setVisibility(View.VISIBLE);
                     createMap();
+                    if (!MyApplication.userStamp.getRoles().contains("OrganizationUser")){
+                        if (event.getDivisions().get(0).isDivisionLeaderExist()){
+                            binding.goToChatBtn.setVisibility(View.VISIBLE);
+                        }
+                    }
                 }
 
                 for (Organization o:event.getOrganizations()) {
@@ -175,10 +204,6 @@ public class EventFragment extends Fragment {
             }
         });
     }
-
-
-
-
     private void createMap(){
         binding.mapView.getMap().move(
                 new CameraPosition(
@@ -204,34 +229,31 @@ public class EventFragment extends Fragment {
         for (Division d: event.getDivisions()) {
             divisionsIds.add(d.getId());
         }
+
         IApi retrofit = RetrofitFactory.getApiService();
         retrofit.GetMeasuresForDivision(divisionsIds).enqueue(new Callback<List<MeasureViewModel>>() {
             @Override
             public void onResponse(Call<List<MeasureViewModel>> call, Response<List<MeasureViewModel>> response) {
                 if (response.isSuccessful()){
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            MeasuresRecyclerAdapter adapter = new MeasuresRecyclerAdapter(response.body(),getContext());
-                            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-                            binding.measuresRecycler.setLayoutManager(layoutManager);
-                            binding.measuresRecycler.setAdapter(adapter);
-                        }
+                    getActivity().runOnUiThread(()->
+                    {
+                        MeasuresRecyclerAdapter adapter = new MeasuresRecyclerAdapter(response.body(),getContext());
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                                getContext(),LinearLayoutManager.HORIZONTAL,false);
+                        binding.measuresRecycler.setLayoutManager(layoutManager);
+                        binding.measuresRecycler.setAdapter(adapter);
                     });
-
-                }else{
-                    showFail();
-
                 }
+                else showFail();
             }
 
             @Override
             public void onFailure(Call<List<MeasureViewModel>> call, Throwable t) {
                 showFail();
-                Log.d("mes",t.getMessage());
             }
         });
     }
+
     private void showLoading(){
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -251,8 +273,6 @@ public class EventFragment extends Fragment {
         });
     }
     private void showFail(){
-        Toast toast = new Toast(requireContext());
-        toast.setText(R.string.loading_error);
-        toast.show();
+        Toast.makeText(getContext(),R.string.loading_error,Toast.LENGTH_SHORT).show();
     }
 }

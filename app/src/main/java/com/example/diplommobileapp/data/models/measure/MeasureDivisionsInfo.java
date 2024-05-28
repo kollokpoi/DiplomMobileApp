@@ -1,7 +1,9 @@
 package com.example.diplommobileapp.data.models.measure;
 
 import com.example.diplommobileapp.data.models.division.Division;
+import com.google.gson.annotations.SerializedName;
 
+import java.util.Base64;
 import java.util.List;
 
 public class MeasureDivisionsInfo {
@@ -17,6 +19,8 @@ public class MeasureDivisionsInfo {
     private Measure measure;
     private List<MeasureDates> measureDates;
     private List<MeasureDays> measureDays;
+    @SerializedName("image")
+    private String previewImageBase64;
 
     public int getId() {
         return id;
@@ -64,5 +68,12 @@ public class MeasureDivisionsInfo {
 
     public List<MeasureDays> getMeasureDays() {
         return measureDays;
+    }
+
+    public byte[] getPreviewImage() {
+        if (previewImageBase64!=null){
+            return  Base64.getDecoder().decode(previewImageBase64);
+        }
+        return null;
     }
 }

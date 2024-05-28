@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diplommobileapp.R;
@@ -32,25 +33,30 @@ public class DivisionRecycleAdapter extends RecyclerView.Adapter<CircledItemRecy
     @Override
     public CircledItemRecycleViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         CardView view = (CardView) LayoutInflater.from(context).inflate(R.layout.event_view, viewGroup, false);
+        if (divisions.size()>1){
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            ViewGroup.LayoutParams newParams = new LinearLayout.LayoutParams((int)(viewGroup.getMeasuredWidth() * 0.8),params.height,1f);
+            view.setLayoutParams(newParams);
+        }
 
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        ViewGroup.LayoutParams newParams = new LinearLayout.LayoutParams((int)(viewGroup.getMeasuredWidth() * 0.8),params.height,1f);
-        view.setLayoutParams(newParams);
 
         return new CircledItemRecycleViewHolder(view,context);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CircledItemRecycleViewHolder divisionRecycleViewHolder, int i) {
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) divisionRecycleViewHolder.itemView.getLayoutParams();
+        if (divisions.size()>1) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) divisionRecycleViewHolder.itemView.getLayoutParams();
 
-        layoutParams.leftMargin = dpToPx(10);
-        layoutParams.rightMargin = dpToPx(10);
+            layoutParams.leftMargin = dpToPx(10);
+            layoutParams.rightMargin = dpToPx(10);
 
-        if (i==0)
-            layoutParams.leftMargin = 0;
-        if (i== divisions.size()-1)
-            layoutParams.rightMargin = 0;
+            if (i==0)
+                layoutParams.leftMargin = 0;
+            if (i== divisions.size()-1)
+                layoutParams.rightMargin = 0;
+        }
+
 
         Division division = divisions.get(i);
         byte[] preview = division.getPreviewImage();

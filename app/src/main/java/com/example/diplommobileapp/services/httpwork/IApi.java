@@ -20,7 +20,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface IApi {
-    //Authorize
+
     @POST("User/CheckPhone")
     Call<AuthResponseModel> CheckPhone(@Body AuthModel model);
     @POST("User/LoginByCode")
@@ -30,16 +30,13 @@ public interface IApi {
     @POST("User/CheckAuthorize")
     Call<UserStamp> CheckAuthorize();
 
-    //user
     @POST("User/GetUser")
     Call<User> getUser();
     @POST("User/UpdateUser")
     Call<Void> UpdateUser(@Body User model);
     @POST("User/UpdatePhone")
     Call<Void> UpdatePhone(@Body AuthModel model);
-    //Events
-    @GET("Events/GetEvents")
-    Call<List<Event>> GetEvents();
+
     @GET("Events/GetEventsForUser")
     Call<List<Event>> GetEventsForUser();
     @GET("Events/GetEvent/{Id}")

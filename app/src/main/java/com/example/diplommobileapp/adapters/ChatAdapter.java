@@ -37,7 +37,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatViewModel chat = chats.get(position);
 
-        holder.getMessageTv().setText(chat.getLastMessage());
+        if (chat.getLastMessage().length()>40){
+            holder.getMessageTv().setText(chat.getLastMessage().substring(0,40)+"...");
+        }
+        else{
+            holder.getMessageTv().setText(chat.getLastMessage());
+        }
         holder.getNameTv().setText(chat.getTitle());
 
         Date date = chat.getLastMessageTime();

@@ -48,8 +48,8 @@
 
 
     <!-- Server Preferences -->
-    <string name="tcp_ip">192.168.1.4</string>
-    <string name="api_ip">http://192.168.1.4:5207/api/</string>
+    <string name="tcp_ip">147.45.239.190</string>
+    <string name="api_ip">http://147.45.239.190/api/</string>
 
 
     <!-- Notification Preferences -->

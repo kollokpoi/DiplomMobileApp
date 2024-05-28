@@ -18,10 +18,8 @@ public class TcpClient {
     private PrintWriter writer;
     private boolean isRunning = false;
     private boolean tryingToReconnect = false;
-
     private String serverAddress;
     private int serverPort;
-
     public TcpClient(String serverAddress, int serverPort) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
@@ -31,12 +29,10 @@ public class TcpClient {
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         writer = new PrintWriter(socket.getOutputStream(), true);
     }
-
     public void setUserCode(String userCode){
         this.userCode = userCode;
         authentication();
     }
-
     public void authentication(){
         sendData(userCode);
         isRunning = true;
@@ -51,23 +47,13 @@ public class TcpClient {
                     authentication();
                     tryingToReconnect = false;
                     isRunning = true;
-                    Log.d("reconnected","Я пересоединился");
-                }
-                else{
-
                 }
             } catch (IOException e) {
-                System.err.println("Failed to connect to the server. Retrying...");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ignored) {}
+                try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
             }
         }
     }
-    public String receiveData() throws IOException {
-        return reader.readLine();
-    }
-
+    public String receiveData() throws IOException {return reader.readLine();}
     public void sendMessage(MessageViewModel message){
         while (!isRunning){
             try {
@@ -75,11 +61,9 @@ public class TcpClient {
                 Thread.sleep(1000);
             } catch (InterruptedException ignored) {}
         }
-
         Gson gson = new Gson();
         sendData(gson.toJson(message));
     }
-
     public void sendData(String data) {
         writer.println(data);
     }

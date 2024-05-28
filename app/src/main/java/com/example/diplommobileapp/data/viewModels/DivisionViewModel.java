@@ -15,6 +15,7 @@ import com.example.diplommobileapp.ui.DivisionActivity;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,9 +40,14 @@ public class DivisionViewModel extends ViewModel {
     private void setDivisionMutableLiveData() {
         IApi retrofit = RetrofitFactory.getApiService();
         setIsLoading(true);
+
+        Log.d("RequestTimer", "Время отправки запроса:"+ new Date());
+        long startTime = System.currentTimeMillis();
         retrofit.GetDivision(divisionId).enqueue(new Callback<Division>() {
             @Override
             public void onResponse(@NonNull Call<Division> call, @NonNull Response<Division> response) {
+                Log.d("RequestTimer", "Время обработки запроса:"+ (System.currentTimeMillis() - startTime)+"мс");
+                Log.d("RequestTimer", "Время получения ответа:"+ new Date());
                 if (response.isSuccessful()) {
                     divisionMutableLiveData.setValue(response.body());
                 }

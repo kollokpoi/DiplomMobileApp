@@ -50,10 +50,7 @@ public class SendCodeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()){
-                    Toast toast = new Toast(SendCodeActivity.this);
-                    toast.setText("Номер изменен");
-                    toast.setDuration(Toast.LENGTH_LONG);
-                    toast.show();
+                    Toast.makeText(SendCodeActivity.this,"Номер изменен",Toast.LENGTH_LONG).show();
                     finish();
                 }else editTextError();
             }
@@ -98,8 +95,6 @@ public class SendCodeActivity extends AppCompatActivity {
         });
     }
     private void showFail(){
-        Toast toast = new Toast(this);
-        toast.setText(R.string.loading_error);
-        toast.show();
+        Toast.makeText(this,R.string.loading_error,Toast.LENGTH_SHORT).show();
     }
 }

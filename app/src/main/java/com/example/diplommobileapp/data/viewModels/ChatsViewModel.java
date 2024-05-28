@@ -30,8 +30,7 @@ public class ChatsViewModel extends ViewModel {
 
     private static ChatsViewModel instance;
     public ChatsViewModel() {
-        if (chats.getValue()==null)
-            getChats();
+        if (chats.getValue()==null) getChats();
         instance = this;
     }
     public void getChats() {
@@ -39,13 +38,9 @@ public class ChatsViewModel extends ViewModel {
         api.GetUserChats().enqueue(new Callback<List<ChatViewModel>>() {
             @Override
             public void onResponse(Call<List<ChatViewModel>> call, Response<List<ChatViewModel>> response) {
-                if (response.isSuccessful()) {
-                    chats.setValue(response.body());
-                } else {
-                    isError.setValue(true);
-                }
+                if (response.isSuccessful()) chats.setValue(response.body());
+                else isError.setValue(true);
             }
-
             @Override
             public void onFailure(Call<List<ChatViewModel>> call, Throwable t) {
                 isError.setValue(true);
@@ -60,7 +55,6 @@ public class ChatsViewModel extends ViewModel {
     public LiveData<List<ChatViewModel>> getChatsLiveData() {
         return chats;
     }
-
     public MutableLiveData<ChatViewModel> getCurrentChat() {
         return currentChat;
     }
@@ -90,6 +84,11 @@ public class ChatsViewModel extends ViewModel {
                         ChatViewModel chat = response.body();
                         chats.getValue().add(chat);
                         chats.setValue(chats.getValue());
+
+                        if (currentChat.getValue()!=null && chat.getId()==currentChat.getValue().getId()){
+                            currentChat.getValue().addMessage(message);
+                            currentChat.setValue(currentChat.getValue());
+                        }
                     } else {
                         isError.setValue(true);
                     }

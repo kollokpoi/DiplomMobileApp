@@ -76,30 +76,6 @@ public class ChatsFragment extends Fragment {
         return root;
     }
 
-    private void showLoading(){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                binding.loading.setVisibility(View.VISIBLE);
-                binding.recyclerView.setVisibility(View.GONE);
-            }
-        });
-    }
-    private void endLoading(){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                binding.loading.setVisibility(View.GONE);
-                binding.recyclerView.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-    private void showFail(){
-        endLoading();
-        Toast toast = new Toast(getContext());
-        toast.setText(R.string.loading_error);
-        toast.show();
-    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

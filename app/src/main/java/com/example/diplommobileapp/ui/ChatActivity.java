@@ -46,23 +46,21 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
-        chatId = getIntent().getIntExtra("id",-1);
-        divisionId = getIntent().getIntExtra("divisionId",-1);
+
 
         IApi api = RetrofitFactory.getApiService();
         viewModel = ChatsViewModel.getInstance();
+
+        chatId = getIntent().getIntExtra("id",-1);
+        divisionId = getIntent().getIntExtra("divisionId",-1);
 
         if (chatId!=-1){
             api.GetChat(chatId).enqueue(new Callback<ChatViewModel>() {
                 @Override
                 public void onResponse(Call<ChatViewModel> call, Response<ChatViewModel> response) {
-                    if (response.isSuccessful()){
-                        setChat(response.body());
-                    }else{
-                        showFail();
-                    }
+                    if (response.isSuccessful()){setChat(response.body());}
+                    else{showFail();}
                 }
-
                 @Override
                 public void onFailure(Call<ChatViewModel> call, Throwable t) {
                     showFail();
@@ -73,13 +71,9 @@ public class ChatActivity extends AppCompatActivity {
             api.GetChatByDivision(divisionId).enqueue(new Callback<ChatViewModel>() {
                 @Override
                 public void onResponse(Call<ChatViewModel> call, Response<ChatViewModel> response) {
-                    if (response.isSuccessful()){
-                        setChat(response.body());
-                    }else{
-                        showFail();
-                    }
+                    if (response.isSuccessful()){setChat(response.body());}
+                    else{showFail();}
                 }
-
                 @Override
                 public void onFailure(Call<ChatViewModel> call, Throwable t) {
                     showFail();
@@ -88,11 +82,7 @@ public class ChatActivity extends AppCompatActivity {
         }else{
             showFail();
         }
-
-
         client = MyApplication.client;
-
-
         viewModel.getCurrentChat().observe(this, chatViewModel -> {
             MessagesAdapter adapter = new MessagesAdapter(chatViewModel.getMessages());
             LinearLayoutManager layoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
@@ -142,9 +132,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private void showFail(){
-        Toast toast = new Toast(this);
-        toast.setText(R.string.loading_error);
-        toast.show();
+        Toast.makeText(this,R.string.loading_error,Toast.LENGTH_SHORT).show();
     }
 
     public class SendMessageTask extends AsyncTask<Void, Void, String> {

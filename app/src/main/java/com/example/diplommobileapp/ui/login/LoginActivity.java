@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         loadingProgressBar = findViewById(R.id.loading);
         authModel= new AuthModel();
-        loginButton.setOnClickListener(LoginActivity.this::readyButtonOnClick);
+        loginButton.setOnClickListener(LoginActivity.this::sendPhoneNumberClick);
         holder = findViewById(R.id.itemsHolder);
         loadingProgressBar.setVisibility(View.GONE);
 
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()){
                     assert response.body() != null;
-                    MyApplication.userStamp = response.body().getStamp();
+                    MyApplication.userStamp = response.body();
                     goToMain();
                 }else{
                     endLoading();
@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
         new Thread(()-> {
             try {
                 MyApplication.client.connect();
-                MyApplication.client.setUserCode(MyApplication.userStamp);
+                MyApplication.client.setUserCode(MyApplication.userStamp.getStamp());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -133,13 +133,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    private void readyButtonOnClick(View view){
+    private void sendPhoneNumberClick(View view){
         String text = String.valueOf(usernameEditText.getText());
-
         if (checkPhoneNumber(text)){
             showLoading();
             authModel.setPhone(text);
-
             IApi retrofit = RetrofitFactory.getApiService();
             retrofit.CheckPhone(authModel).enqueue(new Callback<AuthResponseModel>() {
                 @Override
@@ -154,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
                         loadingProgressBar = findViewById(R.id.loading);
                         usernameEditText = findViewById(R.id.username);
                         loginButton = findViewById(R.id.loginButton);
-                        loginButton.setOnClickListener(LoginActivity.this::codeReadyButtonClick);
+                        loginButton.setOnClickListener(LoginActivity.this::sendCodeClick);
                         holder = findViewById(R.id.itemsHolder);
                         timerTv = findViewById(R.id.timerTv);
                         resendTv = findViewById(R.id.resendTv);
@@ -162,13 +160,10 @@ public class LoginActivity extends AppCompatActivity {
 
                         long millis = (long) timeToReSend.getMinute() *60*1000 + timeToReSend.getSecond() * 1000L;
                         startCountdownTimer(millis);
-                    }else{
-                        Toast toast = new Toast(LoginActivity.this);
-                        toast.setText(R.string.login_failed);
-                        toast.show();
                     }
+                    else
+                        Toast.makeText(LoginActivity.this,R.string.login_failed,Toast.LENGTH_SHORT).show();
                 }
-
                 @Override
                 public void onFailure(@NonNull Call<AuthResponseModel> call, @NonNull Throwable t) {
                     endLoading();
@@ -179,15 +174,13 @@ public class LoginActivity extends AppCompatActivity {
             editTextError(usernameEditText,"Введите номер телефона");
         }
     }
-    private void codeReadyButtonClick(View view){
+    private void sendCodeClick(View view){
         String text = String.valueOf(usernameEditText.getText());
         showLoading();
 
         if (text.length()==5){
             loadingProgressBar.setVisibility(View.VISIBLE);
-
             authModel.setCode(text);
-            authModel.setDeviceToken("");
 
             IApi retrofit = RetrofitFactory.getApiService();
             retrofit.LoginByCode(authModel).enqueue(new Callback<Void>() {
@@ -203,11 +196,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                    runOnUiThread(() -> loadingProgressBar.setVisibility(View.GONE));
                     endLoading();
-                    Toast toast = new Toast(LoginActivity.this);
-                    toast.setText(R.string.login_failed);
-                    toast.show();
+                    showFail();
                 }
             });
         }
@@ -229,13 +219,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
 
             }
-
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 showFail();
             }
         });
     }
+
     private void editTextError(EditText editText, String text){
 
         float translationX = 4f;

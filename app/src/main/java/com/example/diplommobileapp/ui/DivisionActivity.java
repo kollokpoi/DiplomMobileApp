@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.diplommobileapp.MyApplication;
 import com.example.diplommobileapp.R;
 import com.example.diplommobileapp.adapters.MeasuresRecyclerAdapter;
 import com.example.diplommobileapp.data.classes.CustomMapView;
@@ -47,7 +48,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DivisionActivity extends AppCompatActivity {
-    private static final int REQUEST_CODE_PERMISSION_LOCATION = 123;
+    public static final int REQUEST_CODE_PERMISSION_LOCATION = 123;
     ActivityDivisionBinding binding;
     int divisionId;
 
@@ -124,8 +125,10 @@ public class DivisionActivity extends AppCompatActivity {
         if (division.getDateOfEnd() != null) {
             resultDate += " по " + DateWorker.getShortDate(division.getDateOfEnd());
         }
-        if (division.isDivisionLeaderExist()){
-            binding.goToChatBtn.setVisibility(View.VISIBLE);
+        if (!MyApplication.userStamp.getRoles().contains("OrganizationUser")){
+            if (division.isDivisionLeaderExist()){
+                binding.goToChatBtn.setVisibility(View.VISIBLE);
+            }
         }
         binding.datesTv.setText(resultDate);
         binding.nameTv.setText(division.getName());
@@ -163,10 +166,8 @@ public class DivisionActivity extends AppCompatActivity {
         });
     }
 
-    private void showFail() {
-        Toast toast = new Toast(this);
-        toast.setText(R.string.loading_error);
-        toast.show();
+    private void showFail(){
+        Toast.makeText(this,R.string.loading_error,Toast.LENGTH_SHORT).show();
     }
     @Override
     protected void onStart() {

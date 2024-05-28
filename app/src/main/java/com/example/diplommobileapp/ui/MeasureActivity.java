@@ -32,7 +32,6 @@ public class MeasureActivity extends AppCompatActivity {
     ActivityMeasureBinding binding;
     int measureInfoId = 0;
     String name = "";
-    byte[] image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +39,6 @@ public class MeasureActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         measureInfoId =  getIntent().getIntExtra("id",0);
         name =  getIntent().getStringExtra("name");
-        image =  getIntent().getByteArrayExtra("Image");
         showLoading();
         loadData();
     }
@@ -56,7 +54,9 @@ public class MeasureActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ImageUtils.setImageViewFromByteArray(image, binding.eventImageView);
+                            if (measureDivisionsInfo.getPreviewImage() != null){
+                                ImageUtils.setImageViewFromByteArray(measureDivisionsInfo.getPreviewImage(), binding.eventImageView);
+                            }
                             binding.nameTv.setText(name);
                             binding.datesTv.setText("Продолжительность: " + measureDivisionsInfo.getLength());
                             binding.placeTv.setText(measureDivisionsInfo.getPlace());
@@ -163,8 +163,6 @@ public class MeasureActivity extends AppCompatActivity {
         });
     }
     private void showFail(){
-        Toast toast = new Toast(this);
-        toast.setText(R.string.loading_error);
-        toast.show();
+        Toast.makeText(this,R.string.loading_error,Toast.LENGTH_SHORT).show();
     }
 }

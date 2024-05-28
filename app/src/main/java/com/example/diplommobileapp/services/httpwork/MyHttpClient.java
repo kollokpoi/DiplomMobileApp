@@ -30,34 +30,26 @@ public class MyHttpClient {
                 if (client == null) {
                     CookieJar cookieJar = new CookieJar() {
                         private final List<Cookie> cookies = new ArrayList<>();
-
                         @Override
                         public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
                             this.cookies.addAll(cookies);
                             saveCookiesToPreferences(context, cookies);
                         }
-
                         @Override
                         public List<Cookie> loadForRequest(HttpUrl url) {
                             List<Cookie> storedCookies = getCookiesFromPreferences(context);
-
                             return storedCookies != null ? storedCookies : cookies;
                         }
                     };
-
                     HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
                     loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
-                    client = new OkHttpClient.Builder()
-                            .cookieJar(cookieJar)
-                            .addInterceptor(loggingInterceptor)
-                            .build();
+                    client = new OkHttpClient.Builder().cookieJar(cookieJar).addInterceptor(loggingInterceptor).build();
                 }
             }
         }
         return client;
     }
-
     private static void saveCookiesToPreferences(Context context, List<Cookie> cookies) {
         SharedPreferences preferences = context.getSharedPreferences(COOKIE_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -66,7 +58,6 @@ public class MyHttpClient {
         editor.putString(COOKIE_KEY, jsonCookies);
         editor.apply();
     }
-
     private static List<Cookie> getCookiesFromPreferences(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(COOKIE_PREFERENCES, Context.MODE_PRIVATE);
         String jsonCookies = preferences.getString(COOKIE_KEY, null);

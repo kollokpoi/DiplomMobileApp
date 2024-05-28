@@ -7,11 +7,6 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_about"
-        android:icon="@drawable/ic_user_24"
-        android:title="@string/title_about" />
-
-    <item
         android:id="@+id/navigation_dialogs"
         android:icon="@drawable/ic_chat_50dp"
         android:title="@string/title_chats" />
