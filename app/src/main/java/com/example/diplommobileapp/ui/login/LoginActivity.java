@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.diplommobileapp.MyApplication;
 import com.example.diplommobileapp.R;
@@ -50,7 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView timerTv;
     TextView resendTv;
     LinearLayout holder;
-    private static final int REQUEST_CODE_PERMISSION_NOTIFICATION = 123;
+    private static final int REQUEST_CODE_PERMISSION_NOTIFICATION = 1223;
+    public static final int REQUEST_CODE_PERMISSION_LOCATION = 123;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,13 +68,26 @@ public class LoginActivity extends AppCompatActivity {
         loadingProgressBar.setVisibility(View.GONE);
 
         showLoading();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+        String[] permissions = null;
+        boolean locationAccess = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+        boolean notificationAccess = ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED;
+        if (locationAccess || notificationAccess){
+            if (locationAccess && notificationAccess){
+                permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.POST_NOTIFICATIONS};
+            } else if (locationAccess) {
+                permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+            }else {
+                permissions = new String[]{Manifest.permission.POST_NOTIFICATIONS};
+            }
+        }
+        if (permissions!=null){
             ActivityCompat.requestPermissions(
                     this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_CODE_PERMISSION_NOTIFICATION
+                    permissions,
+                    REQUEST_CODE_PERMISSION_LOCATION
             );
         }
+
 
         RetrofitFactory.CreateIApiInstance(this);
         checkAuthorize();
