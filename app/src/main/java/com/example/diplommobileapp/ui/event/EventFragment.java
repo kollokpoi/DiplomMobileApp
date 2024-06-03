@@ -145,7 +145,6 @@ public class EventFragment extends Fragment {
                 @Override
                 public void onFailure(Call<Event> call, Throwable t) {
                     showFail();
-                    Log.d("mes",t.getMessage());
                 }
             });
         }

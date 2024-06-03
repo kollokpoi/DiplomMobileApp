@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
+            android:textAlignment="textEnd"
             android:id="@+id/nameTv"
             android:layout_width="wrap_content"
             android:layout_gravity="end"
